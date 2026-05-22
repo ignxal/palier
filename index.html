@@ -135,6 +135,10 @@
     ::-webkit-scrollbar-thumb { background: rgba(116,172,223,0.5); border-radius: 9999px; }
 
     :focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; border-radius: 4px;}
+    
+    @keyframes stat-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .stat-loading { animation: stat-pulse 1.2s ease-in-out infinite; }
+
     /* ═══════════════════════════════════════════
        AMBIENT (dark only)
     ═══════════════════════════════════════════ */
@@ -1803,6 +1807,8 @@
 
     async function fetchLiveData() {
       const today = dateStr(new Date());
+      const statIds = ['statUVA', 'statDollar', 'statRatio'];
+      statIds.forEach(id => document.getElementById(id)?.classList.add('stat-loading'));
 
       try {
         // ── 1. UVA actual (BCRA v4.0 · variable 31) ───────────────
@@ -1922,6 +1928,7 @@
         document.getElementById('cardRatioDate').textContent = 'sin datos';
         document.getElementById('chartSource').textContent   = 'Fuente: BCRA · datos aproximados (sin conexión)';
       } finally {
+        statIds.forEach(id => document.getElementById(id)?.classList.remove('stat-loading'));
         setupMarquee()
       }
     }
