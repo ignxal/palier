@@ -429,6 +429,15 @@
     .calc-spin-up { top:3px; }
     .calc-spin-dn { bottom:3px; }
     .calc-spin-up:hover, .calc-spin-dn:hover { color:var(--accent-dark); background:var(--accent-bg); }
+    @media (pointer: coarse) {
+      .calc-spin-up, .calc-spin-dn {
+        width: 44px; height: 22px; right: 0; font-size: 11px;
+        background: var(--surface); border-left: 1px solid var(--border);
+      }
+      .calc-spin-up { top: 0; border-radius: 0 8px 0 0; border-bottom: 1px solid var(--border); }
+      .calc-spin-dn { bottom: 0; border-radius: 0 0 8px 0; }
+      .calc-number { padding-right: 52px; }
+    }
     .calc-slider {
       -webkit-appearance:none; appearance:none; width:100%; height:4px;
       border-radius:9999px; outline:none; cursor:pointer;
