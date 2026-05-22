@@ -1712,7 +1712,7 @@ romedio histórico antes de tomar un crédito."
               <a href="${b.url}" target="_blank" rel="noopener noreferrer" class="bank-pill" style="background:${b.color};color:${b.textColor};text-decoration:none;" title="Ir al sitio oficial de ${b.name}">${b.name}</a>
             </td>
             <td style="padding:11px 16px;text-align:center;">
-              <span class="${rateClass(b.tasa)}" style="display:inline-block;padding:3px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.tasa.toFixed(1)}%</span>${note}
+              <span class="${rateClass(b.tasa)}" style="display:inline-block;padding:3px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.tasa.toFixed(1)}%</span>
             </td>
             <td style="padding:11px 16px;text-align:center;">
               ${b.tasaSin
@@ -1720,7 +1720,7 @@ romedio histórico antes de tomar un crédito."
                 : dash}
             </td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.plazo}</td>
-            <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.financiacion}%</td>
+            <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.financiacion}%${note}</td>
             <td style="padding:11px 16px;text-align:center;">${monto}</td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--fg);">${fmt$(b.cuota)}</td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);">
