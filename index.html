@@ -546,11 +546,11 @@
       </div>
     </div>
     <!-- TAB BAR -->
-    <div class="tab-bar">
+    <div class="tab-bar" role="tablist" aria-label="Secciones de Palier">
       <div class="tab-bar-inner max-w-6xl mx-auto px-6 w-full flex">
-        <button class="tab-btn active" id="tabComparador" onclick="switchTab('comparador')">📊 Comparador</button>
-        <button class="tab-btn" id="tabCalculadora" onclick="switchTab('calculadora')">🧮 Calculadora</button>
-        <button class="tab-btn" id="tabInfo" onclick="switchTab('info')">📚 Guía UVA</button>
+        <button class="tab-btn active" id="tabComparador" role="tab" aria-selected="true" aria-controls="panelComprador" tabindex="0" onclick="switchTab('comparador')">📊 Comparador</button>
+        <button class="tab-btn" id="tabCalculadora" role="tab" aria-selected="false" aria-controls="panelCalculadora" tabindex="-1" onclick="switchTab('calculadora')">🧮 Calculadora</button>
+        <button class="tab-btn" id="tabInfo" role="tab" aria-selected="false" aria-controls="panelInfo" tabindex="-1" onclick="switchTab('info')">📚 Guía UVA</button>
       </div>
     </div>
   </header>
@@ -1132,6 +1132,7 @@
     // ─────────────────────────────────────
     // TAB SWITCH
     // ─────────────────────────────────────
+    const TAB_ORDER = ['comparador', 'calculadora', 'info']
     function switchTab(tab) {
       const panels = { comparador: 'panelComparador', calculadora: 'panelCalculadora', info: 'panelInfo' };
       const tabs   = { comparador: 'tabComparador',   calculadora: 'tabCalculadora',   info: 'tabInfo'   };
@@ -1141,11 +1142,31 @@
       });
       Object.entries(tabs).forEach(([key, id]) => {
         const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', key === tab);
+        if (!el) return;
+        el.classList.toggle('active', key === tab)
+        el.setAttribute('aria-selected', key === tab ? 'true' : 'false');
+        el.setAttribute('tabindex', key === tab ? '0' : '-1');
       });
       if (tab === 'calculadora') { initSliders(); recalcAll(); }
       if (tab === 'comparador')  { requestAnimationFrame(() => { if (chartInstance) chartInstance.resize(); }); }
     }
+
+    // Navegación por teclado en la tab bar
+    document.addEventListener('keydown', e => {
+      const focused = document.activeElement;
+      if (focused?.getAttribute('role') !== 'tab') return;
+      const idx = TAB_ORDER.findIndex(t => focused.id === ({ comparador: 'tabComparador', calculadora: 'tabCalculadora', info: 'tabInfo'})[t]);
+      if (idx === -1) return;
+      let next = -1;
+      if (e.key === 'ArrowRight') next = (idx + 1) % TAB_ORDER.length;
+      if (e.key === 'ArrowLeft') next = (idx - 1 + TAB_ORDER.length) % TAB_ORDER.length;
+      if (e.key === 'Home') next = 0;
+      if (e.key === 'End') next = TAB_ORDER.length -1;
+      if (next === -1) return;
+      e.preventDefault();
+      switchTab(TAB_ORDER[next]);
+      document.getElementById({ comparador: 'tabComparador', calculadora: 'tabCalculadora', info: 'tabInfo'}[TAB_ORDER[next]])?.focus();
+    })
 
     // ─────────────────────────────────────
     // SLIDER HELPERS
