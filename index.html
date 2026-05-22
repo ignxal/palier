@@ -493,7 +493,7 @@
 </head>
 <body>
 
-  <div id="gTooltip"></div>
+  <div id="gTooltip" role="tooltip"></div>
 
   <!-- AMBIENT ORBS (dark only) -->
   <div class="orb" style="width:600px;height:600px;background:rgba(116,172,223,0.05);top:-150px;left:50%;transform:translateX(-50%);"></div>
@@ -603,7 +603,7 @@
               <th class="sortable" data-col="financiacion" onclick="colSort('financiacion')" style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:110px;">Financiación<span class="sort-icon">↕</span></th>
               <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:130px;">Monto máx.</th>
               <th class="sortable" data-col="cuota" onclick="colSort('cuota')" style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:150px;">1ra cuota<br><span id="cuotaLabel" style="font-weight:400;opacity:0.6;font-size:10px;">USD100k · 75% · 20a</span><span class="sort-icon">↕</span></th>
-              <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:75px;"><span class="hint" data-tip="Relación Cuota / Ingreso: porcentaje máximo del ingreso que el banco acepta destinar al pago de la cuota.">C/I &#9432;</span></th>
+              <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:75px;"><span class="hint" tabindex="0" data-tip="Relación Cuota / Ingreso: porcentaje máximo del ingreso que el banco acepta destinar al pago de la cuota.">C/I &#9432;</span></th>
               <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:110px;">Ing. mínimo</th>
               <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:130px;">Pre-cancel.</th>
               <th style="padding:11px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:90px;">Monotrib.</th>
@@ -811,7 +811,7 @@
                 <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:150px;">1ª cuota est.</th>
                 <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:100px;">Tasa TNA</th>
                 <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:80px;">Plazo usado</th>
-                <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:75px;"><span class="hint" data-tip="Relación Cuota / Ingreso: porcentaje máximo del ingreso que el banco acepta destinar al pago de la cuota.">C/I máx. &#9432;</span></th>
+                <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:75px;"><span class="hint" tabindex="0" data-tip="Relación Cuota / Ingreso: porcentaje máximo del ingreso que el banco acepta destinar al pago de la cuota.">C/I máx. &#9432;</span></th>
                 <th style="padding:10px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--th-fg);letter-spacing:0.08em;text-transform:uppercase;min-width:100px;">Financ. máx.</th>
               </tr>
             </thead>
@@ -1616,7 +1616,7 @@
             </td>
             <td style="padding:11px 16px;text-align:center;font-size:12px;color:var(--muted);">
               ${b.ingresoMin.includes('SMVM')
-                ? `<span class="hint" data-tip="Salario Mínimo Vital y Móvil · 4 SMVM ≈ $1.086.284 (verificar valor actual)">${b.ingresoMin}</span>`
+                ? `<span class="hint" tabindex="0" data-tip="Salario Mínimo Vital y Móvil · 4 SMVM ≈ $1.086.284 (verificar valor actual)">${b.ingresoMin}</span>`
                 : b.ingresoMin}
             </td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);">${b.preCancel}</td>
@@ -1964,6 +1964,35 @@
     document.addEventListener('mouseout', e => {
       if (e.target.closest('.hint')) gTip.style.opacity = '0';
     });
+
+    // Touch support - tap en .hint muestra el tooltip; tap fuera lo oculta
+    let tipTouchTimeout = null;
+    function showTip(el, below = false) {
+      if (!el?.dataset.tip) return;
+      gTip.textContent = el.dataset.tip;
+      gTip.style.opacity = '0';
+      gTip.style.display = 'block';
+      const r = el.getBoundingClientRect();
+      const tw = gTip.offsetWidth;
+      const th = gTip.offsetHeight;
+      let left = r.left + r.width / 2 - tw / 2;
+      let top = below ? r.bottom + 8 : r.top - th - 8;
+      if (top < 8) top = r.bottom + 8;
+      left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+      gTip.style.left = left + 'px';
+      gTip.style.top = top + 'px';
+      gTip.style.opacity = '1';
+    }
+    document.addEventListener('touchstart', e => {
+      const el = e.target.closest('.hint');
+      clearTimeout(tipTouchTimeout);
+      if (!el) { gTip.style.opacity = '0'; return;}
+      e.preventDefault();
+      showTip(el,true);
+      tipTouchTimeout = setTimeout(() => { gTip.style.opacity = '0';}, 3500)
+    }, { passive: false});
+    document.addEventListener('focusin', e => { const el = e.target.closest('.hint'); if (el) showTip(el); });
+    document.addEventListener('focusout', e => { if (e.target.closest('.hint')) gTip.style.opacity = '0' });
 
     // ─────────────────────────────────────
     // LOCAL FILE DETECTION
