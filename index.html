@@ -669,9 +669,6 @@
       <p id="chartSource" class="mono" style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center;">
         Fuente: BCRA · cargando datos…
       </p>
-      <p class="mono" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center;opacity:0.7;">
-        ⚠ Período 2019–2023: se usa TC BNA oficial. Durante cepo cambiario el CCL fue significativamente mayor, por lo que el ratio real fue más bajo que el graficado.
-      </p>
     </section>
 
     </div><!-- /panelComparador -->
@@ -1891,7 +1888,7 @@
 
         const annualCount = monthlyToAnnual(monthly).length;
         document.getElementById('chartSource').textContent =
-          `Fuente: BCRA v4.0 · UVA y TC BNA · ${annualCount} años de datos · actualizado ${today}`;
+          `Fuente: BCRA v4.0 · UVA y CCL · ${annualCount} años de datos · actualizado ${today}`;
 
       } catch (err) {
         console.warn('Live data error:', err);
