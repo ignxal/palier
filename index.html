@@ -354,9 +354,22 @@
     .stat-strip {
       background: var(--th-bg);
       border-bottom: 1px solid var(--border);
+      overflow: hidden;
     }
     [data-theme="dark"] .stat-strip {
       background: rgba(18,18,26,0.8);
+    }
+    .stat-track-inner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: max-content;
+      padding: 8px 24px;
+      white-space: nowrap;
+    }
+    @keyframes marquee-stats {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* ═══════════════════════════════════════════
@@ -371,7 +384,10 @@
     }
     .tab-btn:hover { color:var(--fg); }
     .tab-btn.active { color:var(--accent-dark); border-bottom-color:var(--accent-dark); }
-
+    @media (max-width: 640px) {
+      .tab-bar-inner { padding-left: 0 !important; padding-right: 0 !important;}
+      .tab-btn { flex: 1; padding: 10px 6px; font-size: 13px; justify-content: center;}
+    }
     /* ═══════════════════════════════════════════
        CALC FIELD (number + slider)
     ═══════════════════════════════════════════ */
@@ -492,7 +508,7 @@
 
     <!-- STATS STRIP -->
     <div class="stat-strip">
-      <div class="max-w-6xl mx-auto px-6 py-2 flex gap-5 overflow-x-auto items-center">
+      <div id="statTrack" class="stat-tracker-inner">
         <div class="flex items-center gap-2 whitespace-nowrap">
           <span class="mono" style="font-size:11px;color:var(--muted);">UVA</span>
           <span id="statUVA" class="mono" style="font-weight:500;color:#D97706;font-size:13px;">…</span>
@@ -521,7 +537,7 @@
     </div>
     <!-- TAB BAR -->
     <div class="tab-bar">
-      <div class="max-w-6xl mx-auto px-6 w-full flex">
+      <div class="tab-bar-inner mx-auto px-6 w-full flex">
         <button class="tab-btn active" id="tabComparador" onclick="switchTab('comparador')">📊 Comparador</button>
         <button class="tab-btn" id="tabCalculadora" onclick="switchTab('calculadora')">🧮 Calculadora</button>
         <button class="tab-btn" id="tabInfo" onclick="switchTab('info')">📚 Guía UVA</button>
