@@ -1587,6 +1587,17 @@
     function renderTable() {
       const list = getVisible();
       document.getElementById('bankCount').textContent = `${list.length} banco${list.length!==1?'s':''}`;
+
+      if (list.length === 0) {
+        document.getElementById('tableBody').innnerHTML = `
+          <tr><td colspan="10" style="padding:32px 16px; test-align: center; color: var(--muted);">
+            <div style="font-size: 24px; margin-bottom: 8px;">🔍</div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Ningún banco coincide con los filtros activos</div>
+            <div style="font-size: 12px"> Probá quitando algún filtro para ver más opciones.</div>
+          </td></tr>`;
+          return;
+      }
+
       const dash = `<span style="color:var(--muted);font-size:16px;">—</span>`;
 
       document.getElementById('tableBody').innerHTML = list.map(b => {
