@@ -756,14 +756,14 @@ romedio histórico antes de tomar un crédito."
           <div id="cardPromedioRange" class="mono" style="font-size:10px;color:var(--muted);margin-top:2px;opacity:0.7;">2016 – 2026</div>
         </div>
         <div class="glass p-4 text-center" style="border-color:rgba(239,68,68,0.2);">
-          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:26px;font-weight:700;color:#b91c1c;letter-spacing:-0.03em;">0,33</div>
+          <div id="cardMinVal" style="font-family:'IBM Plex Sans',sans-serif;font-size:26px;font-weight:700;color:#b91c1c;letter-spacing:-0.03em;">...</div>
           <div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px;">Mínimo histórico</div>
-          <div class="mono" style="font-size:10px;color:#b91c1c;margin-top:2px;">↓ Precancelar</div>
+          <div id="cardMinDate" class="mono" style="font-size:10px;color:#b91c1c;margin-top:2px;">↓ Precancelar</div>
         </div>
         <div class="glass p-4 text-center" style="border-color:rgba(34,197,94,0.2);">
-          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:26px;font-weight:700;color:#15803d;letter-spacing:-0.03em;">1,38</div>
-          <div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px;">Máximo reciente</div>
-          <div class="mono" style="font-size:10px;color:#15803d;margin-top:2px;">↑ Tomar crédito</div>
+          <div id="cardMaxVal" style="font-family:'IBM Plex Sans',sans-serif;font-size:26px;font-weight:700;color:#15803d;letter-spacing:-0.03em;">...</div>
+          <div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px;">Máximo histórico</div>
+          <div id="cardMaxDate" class="mono" style="font-size:10px;color:#15803d;margin-top:2px;">↑ Tomar crédito</div>
         </div>
       </div>
 
@@ -2013,9 +2013,12 @@ romedio histórico antes de tomar un crédito."
             value: m.value / (DOLLAR_CCL_MONTHLY[m.label] ?? tcAvg[m.label]),
           }));
 
-        // Agregar mes actual con ratio en vivo si aún no está
+        // Siempre pisamos el mes actual por el ratio en vivo
         const currMonth = new Date().toISOString().substring(0, 7);
-        if (!monthly.find(m => m.label === currMonth)) {
+        const currIdx = monthly.findIndex(m => m.label === currMonth);
+        if (currIdx >= 0) {
+          monthly[currIdx].value = ratio;
+        } else {
           monthly.push({ label: currMonth, value: ratio });
         }
         monthly.sort((a, b) => a.label.localeCompare(b.label));
@@ -2035,6 +2038,17 @@ romedio histórico antes de tomar un crédito."
           if (elVal)    elVal.textContent    = fmtProm;
           if (elRange)  elRange.textContent  = `${y0} – ${y1}`;
           if (elInline) elInline.textContent = fmtProm;
+
+          const minM = monthly.reduce((a, b) => a.value < b.value ? a : b);
+          const maxM = monthly.reduce((a, b) => a.value > b.value ? a : b);
+          const elMinVal = document.getElementById('cardMinVal');
+          const elMinDate = document.getElementById('cardMinDate');
+          const elMaxVal = document.getElementById('cardMaxVal');
+          const elMaxDate = document.getElementById('cardMaxDate');
+          if (elMinVal) elMinVal.textContent = minM.value.toFixed(2).replace('.', ',');
+          if (elMinDate) elMinDate.textContent = `↓ ${minM.label} · Precancelar`;
+          if (elMaxVal) elMaxVal.textContent = maxM.value.toFixed(2).replace('.', ',');
+          if (elMaxDate) elMaxDate.textContent = `↑ ${maxM.label} · Tomar crédito`;
           renderBanner();   // re-renderizar con nuevo promedio
         }
 
