@@ -646,12 +646,12 @@ romedio histórico antes de tomar un crédito."
         <div style="width:1px;height:16px;background:var(--border);flex-shrink:0;"></div>
         <div class="flex items-center gap-2 whitespace-nowrap">
           <span class="mono" style="font-size:11px;color:var(--muted);">Tasa promedio</span>
-          <span class="mono" style="font-weight:500;color:#b45309;font-size:13px;">9,3% TNA</span>
+          <span id="statTasaPromedio" class="mono" style="font-weight:500;color:#b45309;font-size:13px;">...</span>
         </div>
         <div style="width:1px;height:16px;background:var(--border);flex-shrink:0;"></div>
         <div class="flex items-center gap-2 whitespace-nowrap">
           <span class="mono" style="font-size:11px;color:var(--muted);">Mejor tasa</span>
-          <span class="mono" style="font-weight:500;color:#15803d;font-size:13px;">6,0% · Nación</span>
+          <span id="statMejorTasa" class="mono" style="font-weight:500;color:#15803d;font-size:13px;">...</span>
         </div>
         <div style="width: 1px; height: 16px; background: var(--border); flex-shrink: 0;"></div>
       </div>
@@ -2182,6 +2182,11 @@ romedio histórico antes de tomar un crédito."
     updateSortIcons();
     renderChart();         // fallback inmediato (FALLBACK_PTS, vista anual)
     initSliders();         // fill inicial de los tracks (panel calculadora)
+
+    const tasaPromedio = (banks.reduce((s, b) => s + b.tasa, 0) / banks.length).toFixed(1);
+    const mejorBanco   = banks.reduce((a, b) => a.tasa < b.tasa ? a : b);
+    document.getElementById('statTasaPromedio').textContent = `${tasaPromedio}% TNA`;
+    document.getElementById('statMejorTasa').textContent = `${mejorBanco.tasa.toFixed(1)}% · ${mejorBanco.name}`;
     fetchLiveData();       // reemplaza con datos reales async
   </script>
 </body>
