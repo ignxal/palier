@@ -1944,7 +1944,8 @@ romedio histórico antes de tomar un crédito."
         if (!uvaFirstRes.ok) throw new Error(`BCRA UVA: HTTP ${uvaFirstRes.status}`);
         const uvaFirstJson = await uvaFirstRes.json();
         const uvaDetalle   = uvaFirstJson.results[0].detalle;
-        const uvaLast      = uvaDetalle[0];          // índice 0 = más reciente
+        const todayISO     = dateStr(new Date());
+        const uvaLast      = uvaDetalle.find(p => p.fecha <= todayISO) || uvaDetalle[0];          // índice 0 = más reciente
         const uvaVal       = uvaLast.valor;
         const uvaDate      = uvaLast.fecha;
 
