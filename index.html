@@ -894,13 +894,13 @@ romedio histórico antes de tomar un crédito."
             <div class="calc-field">
               <label class="calc-label" for="calcAjusteReal">Ajuste real ingresos <span class="calc-unit">% mens.</span></label>
               <div class="calc-number-wrap">
-                <input class="calc-number" id="calcAjusteReal" type="number" value="0" min="-5" max="5" step="0.5"
+                <input class="calc-number" id="calcAjusteReal" type="number" value="1" min="-5" max="5" step="0.5"
                   oninput="syncSlider('calcAjusteReal','sliderAjuste');recalcDebounced()"
                   onchange="clampField('calcAjusteReal',-5,5,0.5);syncSlider('calcAjusteReal','sliderAjuste');recalcAll()">
                 <button class="calc-spin-up" onclick="stepField('calcAjusteReal',0.5,-5,5)">▲</button>
                 <button class="calc-spin-dn" onclick="stepField('calcAjusteReal',-0.5,-5,5)">▼</button>
               </div>
-              <input class="calc-slider" id="sliderAjuste" type="range" min="-5" max="5" step="0.5" value="0"
+              <input class="calc-slider" id="sliderAjuste" type="range" min="-5" max="5" step="0.5" value="1"
                 oninput="syncNumber('sliderAjuste','calcAjusteReal');recalcDebounced()">
               <div class="calc-range-labels"><span>−5%</span><span>+5%</span></div>
             </div>
@@ -1208,7 +1208,7 @@ romedio histórico antes de tomar un crédito."
     };
 
     // ─── Estado calculadora ───────────────────
-    let calcState = { valorInmueble:100000, financiacion:75, plazo:20, inflacion:3.0, ajusteIngreso:0.0 };
+    let calcState = { valorInmueble:100000, financiacion:75, plazo:20, inflacion:3.0, ajusteIngreso:1.0 };
     let proyeccionChartInstance = null;
     let recalcTimer = null;
 
@@ -1370,6 +1370,7 @@ romedio histórico antes de tomar un crédito."
 
       renderCalcTable();
       renderProyeccion();
+      renderTable();
     }
 
     // ─────────────────────────────────────
@@ -1715,7 +1716,14 @@ romedio histórico antes de tomar un crédito."
 
       const dash = `<span style="color:var(--muted);font-size:16px;">—</span>`;
 
+      const capitalARS = calcState.valorInmueble * (calcState.financiacion / 100) * DOLLAR_ACTUAL;
+      const lbl = `USD${calcState.valorInmueble.toLocaleString('es-AR')} · ${calcState.financiacion}% · ${calcState.plazo}a`;
+      const cuotaLabelEl = document.getElementById('cuotaLabel');
+      if (cuotaLabelEl) cuotaLabelEl.textContent = lbl;
+
       document.getElementById('tableBody').innerHTML = list.map(b => {
+        const plazoEfect = Math.min(calcState.plazo, b.plazo);
+        const cuotaDyn = computeCuotaForBank(capitalARS, b.tasa, plazoEfect);
         const dest = b.destino.includes('Refacción')
           ? `<span style="font-size:12px;color:var(--muted);">1ra/2da · Ref/Amp</span>`
           : `<span style="font-size:12px;color:var(--muted);">1ra/2da Vivienda</span>`;
@@ -1741,7 +1749,7 @@ romedio histórico antes de tomar un crédito."
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.plazo}</td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;">${b.financiacion}%${note}</td>
             <td style="padding:11px 16px;text-align:center;">${monto}</td>
-            <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--fg);">${fmt$(b.cuota)}</td>
+            <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--fg);">${fmt$(cuotaDyn)}</td>
             <td style="padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);">
               ${b.ci ? b.ci+'%' : dash}
             </td>
