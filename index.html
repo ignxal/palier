@@ -1806,9 +1806,26 @@
 
       if (proyeccionChartInstance) { proyeccionChartInstance.destroy(); proyeccionChartInstance = null; }
 
+      const zonasPlugin = showPct ? [{
+        id: 'zonasCI',
+        beforeDraw(chart) {
+          const { ctx, chartArea: { left, right, top, bottom}, scales: { y }} = chart;
+          const y25 = y.getPixelForValue(25);
+          ctx.save();
+
+          ctx.fillStyle = dark ? 'rgba(34,197,94,0.04)' : 'rgba(34,197,94,0.05)';
+          ctx.fillRect(left, Math.max(y25, top), right - left, bottom - Math.max(y25, top));
+
+          ctx.fillStyle = dark ? 'rgba(239,68,68,0.04)' : 'rgba(239,68,68,0.05)';
+          ctx.fillRect(left, top, right - left, Math.max(y25, bottom) - top, 0);
+          ctx.restore()
+        }
+      }] : [];
+
       proyeccionChartInstance = new Chart(canvas.getContext('2d'), {
         type: 'line',
         data: { labels: meses.map(m => m === 0 ? 'Hoy' : `Mes ${m}`), datasets },
+        plugins: zonasPlugin,
         options: {
           responsive:true, maintainAspectRatio:false,
           interaction: { mode:'index', intersect:false },
