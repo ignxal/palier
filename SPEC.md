@@ -1,7 +1,7 @@
 # Feature Specification: Palier — Comparador de Hipotecas UVA
 
 **Created**: 2025-05-20  
-**Actualizado**: 2026-05-21
+**Actualizado**: 2026-05-25
 
 ---
 
@@ -36,6 +36,11 @@ Un usuario que está evaluando tomar un crédito hipotecario UVA quiere ver de u
    - **Given** la tabla está visible
    - **When** el usuario hace clic en el header "1ra cuota"
    - **Then** la tabla se reordena de menor a mayor cuota; un segundo clic invierte el orden
+
+5. **Scenario**: Financiación excede el máximo de un banco
+   - **Given** el usuario sube el slider de financiación a 90%
+   - **When** la tabla de la calculadora renderiza
+   - **Then** los bancos con máximo < 90% muestran su límite efectivo (ej. 65%, 70%) con la nota amber "máx. X%" y su cuota se calcula sobre ese capital reducido; los bancos con máximo ≥ 90% no muestran nota
 
 ---
 
@@ -122,6 +127,39 @@ El usuario puede cambiar el tema visual según su preferencia o el entorno (día
 - ¿Qué pasa si todos los filtros activos dejan 0 bancos? → La tabla muestra "0 bancos" y un tbody vacío — no hay mensaje de error explícito (mejora pendiente).
 - ¿Qué pasa en pantallas muy angostas (< 375px)? → La tabla tiene scroll horizontal; las columnas pegadas (banco) se mantienen fijas.
 - ¿Qué pasa si Chart.js falla al cargar del CDN? → El canvas queda en blanco; no hay error manejado — mejora pendiente.
+- ¿Qué pasa si el usuario pide más financiación que la máxima del banco más generoso (ej. 95% cuando ningún banco financia >80%)? → Todos los bancos se capean a su máximo individual; cada uno muestra su nota "máx. X%". El slider puede llegar a 100% pero las cuotas reflejan el capital real de cada banco.
+
+---
+
+### User Story 5 — Validación de capacidad de pago (Priority: P2)
+
+Un usuario que ingresó su sueldo mensual en el simulador quiere saber si califica según la regla del 25% C/I del banco más barato, sin tener que hacer el cálculo mental.
+
+**Why this priority**: El "Ingreso mín. estimado" ya está en el infobox, pero en modo lectura — el usuario tiene que compararlo manualmente con lo que ingresó. El warning cierra esa brecha de forma inmediata y accionable.
+
+**Independent Test**: El usuario ingresa un sueldo menor al mínimo estimado y ve el banner amber sin necesidad de hacer scroll ni leer el infobox.
+
+**Acceptance Scenarios**:
+
+1. **Scenario**: Ingreso ingresado < mínimo estimado
+   - **Given** el usuario está en modo "Quiero sacar uno" y ha ingresado un monto en el campo "Tu ingreso mensual neto"
+   - **When** ese monto es menor a `cuota_banco_más_barato / 0.25`
+   - **Then** aparece un banner amber visible con el monto ingresado y el mínimo necesario, más sugerencias de ajuste (reducir inmueble, bajar financiación, estirar plazo)
+
+2. **Scenario**: Ingreso suficiente
+   - **Given** el usuario ingresó un monto ≥ al mínimo estimado
+   - **When** la calculadora recalcula
+   - **Then** el banner no aparece (o desaparece si ya estaba visible)
+
+3. **Scenario**: Sin ingreso ingresado
+   - **Given** el campo "Tu ingreso mensual neto" está vacío o en cero
+   - **When** la calculadora renderiza
+   - **Then** el banner no aparece
+
+4. **Scenario**: Cambio a modo "Ya tengo uno"
+   - **Given** el banner amber está visible
+   - **When** el usuario cambia al modo "Ya tengo uno"
+   - **Then** el banner desaparece inmediatamente
 
 ---
 

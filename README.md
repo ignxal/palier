@@ -13,7 +13,7 @@
 Palier es una página web **de una sola hoja** (sin backend, sin build system) que compara las condiciones de créditos hipotecarios UVA de **14 bancos argentinos**. Tiene tres secciones navegables por tab:
 
 - **Comparador** — tabla de bancos con tasas, plazos, financiación, filtros y el ratio histórico UVA/CCL para contexto de mercado
-- **Calculadora** — simulador interactivo de primera cuota con sliders, proyección a 24 meses y umbral de ingreso necesario
+- **Calculadora** — simulador interactivo con modo dual ("Quiero sacar uno" / "Ya tengo uno"), proyección de cuotas a 24 meses, validación automática de capacidad de pago y perspectiva de deuda en dólares para créditos activos
 - **Guía UVA** — explicación de qué es la UVA, cómo funciona el crédito, el ratio, el sistema francés, precancelación y glosario
 
 Los datos del BCRA (valor UVA, tipo de cambio) se cargan en tiempo real al abrir la página.
@@ -22,23 +22,27 @@ Los datos del BCRA (valor UVA, tipo de cambio) se cargan en tiempo real al abrir
 
 ## Funcionalidades
 
-| Feature                                                 | Estado |
-| ------------------------------------------------------- | ------ |
-| Tabla comparativa de 14 bancos                          | ✅     |
-| Semáforo de tasas (verde / amarillo / rojo)             | ✅     |
-| Filtros: monotributistas, refacción, construcción       | ✅     |
-| Ordenamiento por columna (click en header)              | ✅     |
-| Top 3 mejores tasas                                     | ✅     |
-| Datos en vivo: UVA y CCL (BCRA + DolarAPI)              | ✅     |
-| Ratio UVA/CCL histórico con datos reales (2016–hoy)     | ✅     |
-| Promedio histórico calculado dinámicamente desde la API | ✅     |
-| Modo oscuro / claro                                     | ✅     |
-| Links directos al sitio oficial de cada banco           | ✅     |
-| Tooltips contextuales (SMVM, C/I)                       | ✅     |
-| **Calculadora de cuota interactiva**                    | ✅     |
-| **Proyección de cuotas 24 meses**                       | ✅     |
-| **Guía UVA** (qué es, cómo funciona, glosario)          | ✅     |
-| Alertas de cambio de tasa                               | 🔜     |
+| Feature | Estado |
+|---|---|
+| Tabla comparativa de 14 bancos | ✅ |
+| Semáforo de tasas (verde / amarillo / rojo) | ✅ |
+| Filtros: monotributistas, refacción, construcción | ✅ |
+| Ordenamiento por columna (click en header) | ✅ |
+| Top 3 mejores tasas | ✅ |
+| Datos en vivo: UVA y CCL (BCRA + DolarAPI) | ✅ |
+| Ratio UVA/CCL histórico con datos reales (2016–hoy) | ✅ |
+| Promedio histórico calculado dinámicamente desde la API | ✅ |
+| Modo oscuro / claro | ✅ |
+| Links directos al sitio oficial de cada banco | ✅ |
+| Tooltips contextuales (SMVM, C/I) | ✅ |
+| **Calculadora de cuota interactiva** | ✅ |
+| **Modo "Ya tengo un crédito"** (deuda en USD, perspectiva de ratio, cuota estimada) | ✅ |
+| **Proyección de cuotas 24 meses** (ARS nominal o % de ingreso) | ✅ |
+| **Selector de bancos en el gráfico de proyección** | ✅ |
+| **Capping automático de financiación por banco** (nota si el banco financia menos que lo pedido) | ✅ |
+| **Validación de ingreso vs C/I 25%** (banner amber si el sueldo ingresado no alcanza) | ✅ |
+| **Guía UVA** (qué es, cómo funciona, glosario) | ✅ |
+| Alertas de cambio de tasa | 🔜 |
 
 ---
 
@@ -97,11 +101,11 @@ El ratio `UVA / dólar CCL` es el indicador central del producto: determina si e
 
 **Fuente del dollar histórico:**
 
-| Período      | Fuente                           | Motivo                                    |
-| ------------ | -------------------------------- | ----------------------------------------- |
+| Período | Fuente | Motivo |
+|---|---|---|
 | 2016–2026-05 | `DOLLAR_CCL_MONTHLY` hardcodeado | CCL real de Bluelytics (blue ≈ CCL ±2-5%) |
-| Meses nuevos | BCRA TC BNA (primera página)     | Post-cepo 2023: spread BNA/CCL < 2%       |
-| Hoy          | DolarAPI CCL en vivo             | Exacto                                    |
+| Meses nuevos | BCRA TC BNA (primera página) | Post-cepo 2023: spread BNA/CCL < 2% |
+| Hoy | DolarAPI CCL en vivo | Exacto |
 
 **Por qué no se usa el TC BNA oficial para todo el período:**
 Durante los cepos cambiarios 2019–2023, el TC oficial estaba fijo mientras el CCL libre llegó a triplicarlo (spreads del 80–158%). Usar TC oficial distorsionaría fuertemente la historia del ratio en ese período. Los valores de `DOLLAR_CCL_MONTHLY` corrigen esto con datos reales del mercado.
@@ -126,15 +130,21 @@ palier/
 ├── serve.sh        ← servidor local con Python/Node
 ├── CLAUDE.md       ← guía para agentes de IA trabajando en el proyecto
 ├── README.md       ← este archivo
-└── SPEC.md         ← especificación de features y criterios de aceptación
-
+├── SPEC.md         ← especificación de features y criterios de aceptación
+└── ROADMAP.md      ← evolutivos planeados + monetización
 ```
+
+---
+
+## Dominio
+
+El proyecto está pensado para desplegarse en **palier.ar** (disponible en NIC Argentina). Registro vía [nic.ar](https://nic.ar) (~$3.500 ARS/año), requiere CUIT y clave fiscal AFIP nivel 2.
 
 ---
 
 ## Autor
 
-Hecho por [@\_ignx](https://x.com/_ignx) · Buenos Aires, Argentina.
+Hecho por [@_ignx](https://x.com/_ignx) · Buenos Aires, Argentina.
 
 ---
 
